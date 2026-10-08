@@ -15,7 +15,7 @@ type Log struct {
 }
 
 // RetrySchedule — attempt number ke hisaab se kitni der baad retry karna hai
-// Attempt 1 fail ho to 10s baad Attempt 2, phir 30s baad Attempt 3, ...
+// Attempt 1 fail ho to 10s baad Attempt 2, phir 30s baad Attempt 3
 var RetrySchedule = []time.Duration{
 	10 * time.Second,
 	30 * time.Second,
@@ -25,3 +25,6 @@ var RetrySchedule = []time.Duration{
 }
 
 const MaxAttempts = 5
+
+//we make this file to define the structure of the log and the retry schedule.
+//with the help of this file we can keep track of the logs and retry the failed attempts.

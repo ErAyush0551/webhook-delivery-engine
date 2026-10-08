@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
+	"time"
+	
 
 	"hookflow/core/cache"
 	"hookflow/core/config"
@@ -15,6 +18,8 @@ import (
 )
 
 func main() {
+
+	
 
 	cfg := config.Load()
 
@@ -65,9 +70,11 @@ func main() {
 	webhookService := webhook.NewService(webhookRepository, cache.Client)
 	webhookHandler := webhook.NewHandler(webhookService)
 
-	// 6. Delivery setup (worker background me chalega)
+	// 6. Delivery setup (worker + status handler + retention job)
 
 	deliveryRepository := delivery.NewPostgresRepository(db)
+	deliveryHandler := delivery.NewHandler(deliveryRepository)
+
 	deliveryWorker := delivery.NewWorker(
 		cache.Client,
 		subscriptionRepository,
@@ -76,6 +83,9 @@ func main() {
 	)
 	go deliveryWorker.Start(context.Background())
 	fmt.Println("Delivery worker started")
+
+	go startRetentionJob(context.Background(), deliveryRepository)
+	fmt.Println("Retention job started")
 
 	// 7. Create HTTP router
 
@@ -103,10 +113,16 @@ func main() {
 		}
 	})
 
-	// GET    /subscriptions/{id} → Get subscription
-	// PUT    /subscriptions/{id} → Update subscription
-	// DELETE /subscriptions/{id} → Delete subscription
+	// GET    /subscriptions/{id}       → Get subscription
+	// PUT    /subscriptions/{id}       → Update subscription
+	// DELETE /subscriptions/{id}       → Delete subscription
+	// GET    /subscriptions/{id}/logs  → Recent delivery attempts for this subscription
 	mux.HandleFunc("/subscriptions/", func(w http.ResponseWriter, r *http.Request) {
+
+		if strings.HasSuffix(r.URL.Path, "/logs") {
+			deliveryHandler.GetSubscriptionLogs(w, r)
+			return
+		}
 
 		switch r.Method {
 
@@ -142,11 +158,44 @@ func main() {
 	mux.HandleFunc("/ingest/", webhookHandler.Ingest)
 
 	// ============================================
-	// 10. Start HTTP server
+	// 10. Status endpoint
+	// ============================================
+	//
+	// GET /status/{webhook_id} → poori delivery attempt history ek webhook ki
+	//
+	mux.HandleFunc("/status/", deliveryHandler.GetStatus)
+
+	// ============================================
+	// 11. Start HTTP server
 	// ============================================
 	fmt.Println("HookFlow server running on port:", cfg.AppPort)
 
 	if err := http.ListenAndServe(":"+cfg.AppPort, mux); err != nil {
 		log.Fatal(err)
+	}
+}
+
+// startRetentionJob har ghante purane (72hrs se zyada) delivery logs
+// database se delete karta rehta hai. Ye background me chalta hai
+// (main() se `go startRetentionJob(...)` ke through call hota hai).
+func startRetentionJob(ctx context.Context, repo delivery.Repository) {
+	ticker := time.NewTicker(1 * time.Hour)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			cutoff := time.Now().Add(-72 * time.Hour)
+			deleted, err := repo.DeleteOlderThan(ctx, cutoff)
+			if err != nil {
+				log.Println("retention job error:", err)
+				continue
+			}
+			if deleted > 0 {
+				log.Printf("retention job: deleted %d old delivery logs\n", deleted)
+			}
+		}
 	}
 }

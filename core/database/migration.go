@@ -10,7 +10,6 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"    
 )
-
 func  RunMigrations(ctx context.Context, db *pgxpool.Pool)error {
 	migrationDir := "migration"
 
@@ -24,6 +23,8 @@ func  RunMigrations(ctx context.Context, db *pgxpool.Pool)error {
 	})
 
 	for _, file := range files{
+
+		
 		if file.IsDir() || !strings.HasSuffix(file.Name (),".sql"){
 			continue
 		}
@@ -49,3 +50,9 @@ func  RunMigrations(ctx context.Context, db *pgxpool.Pool)error {
 
 
 }
+
+//we have made this file to run the migration files in the migration folder. 
+// we have used the pgxpool package to connect to the database and run the migrations. 
+// we have used the os package to read the migration files from the migration folder. 
+// we have used the sort package to sort the migration files in ascending order.
+//  we have used the strings package to check if the file is a sql file or not.	

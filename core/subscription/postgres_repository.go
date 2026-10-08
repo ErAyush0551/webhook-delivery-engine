@@ -69,79 +69,7 @@ func (r *PostgresRepository) Create(
 	return nil
 }
 
-//-------------------------------------------------------------------------------------
-// func (r *PostgresRepository) Create(
-// 	ctx context.Context,
-// 	subscription *Subscription,
-// ) error {
 
-// 	query := `
-// 		INSERT INTO subscriptions (
-// 			id,
-// 			target_url,
-// 			secret
-// 		)
-// 		VALUES ($1, $2, $3)
-// 		RETURNING
-// 			id,
-// 			target_url,
-// 			secret,
-// 			is_active,
-// 			created_at,
-// 			updated_at
-// 	`
-
-// 	err := r.db.QueryRow(
-// 		ctx,
-// 		query,
-// 		subscription.ID,
-// 		subscription.TargetURL,
-// 		subscription.Secret,
-// 	).Scan(
-// 		&subscription.ID,
-// 		&subscription.TargetURL,
-// 		&subscription.Secret,
-// 		&subscription.IsActive,
-// 		&subscription.CreatedAt,
-// 		&subscription.UpdatedAt,
-// 	)
-
-// 	if err != nil {
-// 		return fmt.Errorf("failed to create subscription: %w", err)
-// 	}
-
-// 	return nil
-// }
-//-------------------------------------------------------------------------------------
-
-// func (r *PostgresRepository) Create(ctx context.Context, subscription *Subscription) error {
-// 	query := `
-// 		INSERT INTO subscriptions (
-// 			target_url,
-// 			secret
-// 		)
-// 		VALUES ($1, $2)
-// 		RETURNING
-// 			id,
-// 			target_url,
-// 			secret,
-// 			is_active,
-// 			created_at,
-// 			updated_at
-// 	`
-// 	err := r.db.QueryRow(ctx, query, subscription.TargetURL, subscription.Secret).Scan(
-// 		&subscription.ID,
-// 		&subscription.TargetURL,
-// 		&subscription.Secret,
-// 		&subscription.IsActive,
-// 		&subscription.CreatedAt,
-// 		&subscription.UpdatedAt,
-// 	)
-// 	if err != nil {
-// 		return fmt.Errorf("failed to create subscription: %w", err)
-// 	}
-// 	return nil
-// }
 
 func (r *PostgresRepository) GetByID(
 	ctx context.Context,

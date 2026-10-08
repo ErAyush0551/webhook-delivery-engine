@@ -34,3 +34,9 @@ CREATE TABLE IF NOT EXISTS delivery_attempts (
 CREATE INDEX IF NOT EXISTS idx_webhooks_subscription_id ON webhooks(subscription_id);
 CREATE INDEX IF NOT EXISTS idx_delivery_attempts_webhook_id ON delivery_attempts(webhook_id);
 CREATE INDEX IF NOT EXISTS idx_delivery_attempts_subscription_id ON delivery_attempts(subscription_id);
+
+-- We have made this file to create the initial database schema for the HookFlow application.
+-- This migration script creates three tables: subscriptions, webhooks, and delivery_attempts (logs).
+-- The subscriptions table stores information about each subscription, including the target URL and secret.
+-- The webhooks table stores information about each webhook, including the payload and status.
+-- The delivery_attempts table stores logs of each delivery attempt, including the status, HTTP status code, and any error messages.

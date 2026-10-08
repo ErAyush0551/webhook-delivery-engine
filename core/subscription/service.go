@@ -40,23 +40,7 @@ func (s *Service) Create(
 	return subscription, nil
 }
 
-// func (s *Service) Create(ctx context.Context, targetURL string, secret string) (*Subscription, error) {
-// 	if targetURL == "" {
-// 		return nil, fmt.Errorf("target URL is required")
-// 	}
 
-// 	subscription := &Subscription{
-// 		TargetURL: targetURL,
-// 		Secret:    secret,
-// 	}
-
-// 	// Repository call - ID DB dwara create hone ke baad subscription struct me automatic scan ho jayegi
-// 	if err := s.repository.Create(ctx, subscription); err != nil {
-// 		return nil, err
-// 	}
-
-// 	return subscription, nil
-// }
 
 func (s *Service) GetByID(
 	ctx context.Context,
