@@ -1,0 +1,23 @@
+name: Deploy HookFlow to AWS EC2
+
+on:
+  push:
+    branches:
+      - main  # Jab bhi main branch par push hoga, yeh pipeline chalegi
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/webhook-delivery-engine
+            git pull origin main
+            docker-compose up --build -d
+            docker image prune -f
