@@ -3,7 +3,7 @@ name: Deploy HookFlow to AWS EC2
 on:
   push:
     branches:
-      - main  # Jab bhi main branch par push hoga, yeh pipeline chalegi
+      - main
 
 jobs:
   deploy:
@@ -16,6 +16,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          command_timeout: 30m  # Yeh nayi line add karni hai (30 minute ki limit)
           script: |
             cd ~/webhook-delivery-engine
             git pull origin main
