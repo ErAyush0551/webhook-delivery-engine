@@ -2,31 +2,30 @@ package config
 
 import (
 	"fmt"
+	"github.com/joho/godotenv"
 	"os"
 	"strconv"
-	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	AppPort string
-	DatabaseURL string
-	RedisURL string
+	AppPort       string
+	DatabaseURL   string
+	RedisURL      string
 	RedisAddr     string
 	RedisPassword string
 	RedisDB       int
 }
 
-
 func Load() *Config {
 	err := godotenv.Load()
-    if err != nil {
-        fmt.Println("Warning: .env file not found!")
-    }
+	if err != nil {
+		fmt.Println("Warning: .env file not found!")
+	}
 
 	return &Config{
-		AppPort:     getEnv("APP_PORT", "8080"),
-		DatabaseURL: getEnv("DATABASE_URL", ""),
-		RedisURL:    getEnv("REDIS_URL", ""),
+		AppPort:       getEnv("APP_PORT", "8080"),
+		DatabaseURL:   getEnv("DATABASE_URL", ""),
+		RedisURL:      getEnv("REDIS_URL", ""),
 		RedisAddr:     getEnv("REDIS_ADDR", "localhost:6379"),
 		RedisPassword: getEnv("REDIS_PASSWORD", ""),
 		RedisDB:       getEnvInt("REDIS_DB", 0),

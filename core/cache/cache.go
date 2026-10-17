@@ -1,6 +1,6 @@
-package  cache
+package cache
 
-import(
+import (
 	"context"
 	"fmt"
 	"github.com/redis/go-redis/v9"
@@ -8,7 +8,7 @@ import(
 
 var Client *redis.Client
 
-func Connect(addr string, password string, db int)error{
+func Connect(addr string, password string, db int) error {
 	Client = redis.NewClient(&redis.Options{
 		Addr:     addr,
 		Password: password,
@@ -16,7 +16,7 @@ func Connect(addr string, password string, db int)error{
 	})
 
 	ctx := context.Background()
-	if err:= Client.Ping(ctx).Err(); err != nil {
+	if err := Client.Ping(ctx).Err(); err != nil {
 		return fmt.Errorf("failed to connect to Redis: %w", err)
 	}
 	fmt.Println("Connected to Redis")

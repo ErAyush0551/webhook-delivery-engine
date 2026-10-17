@@ -40,8 +40,6 @@ func (s *Service) Create(
 	return subscription, nil
 }
 
-
-
 func (s *Service) GetByID(
 	ctx context.Context,
 	id string,

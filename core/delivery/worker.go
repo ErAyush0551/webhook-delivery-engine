@@ -18,7 +18,7 @@ import (
 )
 
 type Worker struct {
-	redisClient     *redis.Client 
+	redisClient     *redis.Client
 	subscriptionSvc subscription.Repository
 	webhookRepo     webhook.Repository
 	deliveryRepo    Repository
@@ -166,8 +166,8 @@ func (w *Worker) getSubscriptionCached(ctx context.Context, id string) (*subscri
 	cached, err := w.redisClient.Get(ctx, cacheKey).Result()
 	if err == nil {
 		var sub subscription.Subscription
-		if jsonErr := json.Unmarshal([] byte(cached), &sub); jsonErr == nil {
-			return &sub, nil 
+		if jsonErr := json.Unmarshal([]byte(cached), &sub); jsonErr == nil {
+			return &sub, nil
 		}
 	}
 

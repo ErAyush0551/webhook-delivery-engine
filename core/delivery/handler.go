@@ -38,7 +38,7 @@ func (h *Handler) GetStatus(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(logs)
 }
 
-// GET /subscriptions/{id}/logs —  it returns the recent attempts for a subscription with the given id. It returns a list of logs for the subscription. 
+// GET /subscriptions/{id}/logs —  it returns the recent attempts for a subscription with the given id. It returns a list of logs for the subscription.
 // The default limit is 20, but it can be overridden by providing a limit query parameter.
 func (h *Handler) GetSubscriptionLogs(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {

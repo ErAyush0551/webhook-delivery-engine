@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"strings"
 	"time"
-	
 
 	"hookflow/core/cache"
 	"hookflow/core/config"
@@ -18,8 +17,6 @@ import (
 )
 
 func main() {
-
-	
 
 	cfg := config.Load()
 

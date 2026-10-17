@@ -1,5 +1,3 @@
-
-
 package webhook
 
 import "context"

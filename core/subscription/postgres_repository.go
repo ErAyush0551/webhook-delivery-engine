@@ -69,8 +69,6 @@ func (r *PostgresRepository) Create(
 	return nil
 }
 
-
-
 func (r *PostgresRepository) GetByID(
 	ctx context.Context,
 	id string,

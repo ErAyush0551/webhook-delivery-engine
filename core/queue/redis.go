@@ -41,9 +41,8 @@ func EnqueueDelayed(
 
 // EnqueueAt adds a task to Redis with a specific execution time.
 //
-// Redis Sorted Set:
-//   score  = time when task should run
-//   member = actual delivery task
+// It uses a Redis Sorted Set: the score is the time when the task should
+// run, and the member is the actual delivery task.
 func EnqueueAt(
 	ctx context.Context,
 	client *redis.Client,
